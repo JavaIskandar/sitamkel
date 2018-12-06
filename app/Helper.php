@@ -11,7 +11,7 @@ namespace App;
 
 class Helper
 {
-    function get_jam(){
+    public static function get_jam(){
         $jam = array();
         $jam[0]= '--';
         $range = 1;
@@ -31,7 +31,7 @@ class Helper
         return $jam;
     }
 
-    function get_hari(){
+    public static function get_hari(){
         $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'];
         return $hari;
     }
