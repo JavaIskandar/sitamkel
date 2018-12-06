@@ -23,64 +23,70 @@
 @endsection
 
 @push('js')
-<script>
-    function tampilDekat() {
-        getCurLocation();
+    <script>
+        var default_lat = {{ $def_lat }};
+        var default_lng = {{ $def_lng }};
+        var default_zoom = {{ $def_zoom }};
+    </script>
+    <script src="{{ asset('js/script.js') }}"></script>
+    <script>
+        function tampilDekat() {
+            getCurLocation();
 
-        map_dekat = new google.maps.Map(document.getElementById('map'), {
-            zoom: {{ $def_zoom }},
-            center: {
-                lat: default_lat,
-                lng: default_lng
-            }
-        });
-
-        {{--{{ dd(json_encode($tambal_ban)) }}--}}
-
-        var data =  <?= json_encode($tambal_ban) ?>;
-
-        $.each(data, function (k, v) {
-            var obj = JSON.parse(v.jam_kerja);
-            var pos = {
-                lat: parseFloat(v.lat),
-                lng: parseFloat(v.lng)
-            };
-            var contentString = '<h3>' + v.nama + '</h3>' +
-                '<p align="left">'+v.alamat+'</p>'+
-                '<p align="center"><a href="?m=tempat_detail&ID=' + v.id + '" class="link_detail btn btn-primary">Lihat Detail</a>';
-
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
+            map_dekat = new google.maps.Map(document.getElementById('map'), {
+                zoom: {{ $def_zoom }},
+                center: {
+                    lat: default_lat,
+                    lng: default_lng
+                }
             });
 
-            if (v.status_jam == true){
-                var marker = new google.maps.Marker({
-                    position: pos,
-                    icon: {
-                        url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-                    },
-                    map: map_dekat,
-                    animation: google.maps.Animation.DROP
-                });
-            }
-            else{
-                var marker = new google.maps.Marker({
-                    position: pos,
-                    icon: {
-                        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                    },
-                    map: map_dekat,
-                    animation: google.maps.Animation.DROP
-                });
-            }
-            marker.addListener('click', function () {
-                infowindow.open(map_dekat, marker);
-            });
-        });
-    }
+                    {{--{{ dd(json_encode($tambal_ban)) }}--}}
 
-    $(function () {
-        tampilDekat();
-    })
-</script>
+            var data =  <?= json_encode($tambal_ban) ?>;
+
+            $.each(data, function (k, v) {
+                var obj = JSON.parse(v.jam_kerja);
+                var pos = {
+                    lat: parseFloat(v.lat),
+                    lng: parseFloat(v.lng)
+                };
+                var contentString = '<h3>' + v.nama + '</h3>' +
+                    '<p align="left">' + v.alamat + '</p>' +
+                    '<p align="center"><a href="detail-tempat?id= ' + v.id + '" class="link_detail btn btn-primary">Lihat Detail</a>';
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                if (v.status_jam == true) {
+                    var marker = new google.maps.Marker({
+                        position: pos,
+                        icon: {
+                            url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                        },
+                        map: map_dekat,
+                        animation: google.maps.Animation.DROP
+                    });
+                }
+                else {
+                    var marker = new google.maps.Marker({
+                        position: pos,
+                        icon: {
+                            url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                        },
+                        map: map_dekat,
+                        animation: google.maps.Animation.DROP
+                    });
+                }
+                marker.addListener('click', function () {
+                    infowindow.open(map_dekat, marker);
+                });
+            });
+        }
+
+        $(function () {
+            tampilDekat();
+        })
+    </script>
 @endpush

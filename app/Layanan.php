@@ -18,5 +18,16 @@ class Layanan extends Model
         'nama'
     ];
 
-
+    public function getTambalBan($query = true){
+        return $query ? $this->belongsToMany(
+            'App\Tambalban',
+            'layanan_tambal_ban',
+            'layanan_id',
+            'tambal_ban_id') :
+            $this->belongsToMany(
+            'App\Tambalban',
+            'layanan_tambal_ban',
+            'layanan_id',
+            'tambal_ban_id')->get();
+    }
 }

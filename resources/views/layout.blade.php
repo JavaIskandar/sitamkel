@@ -29,12 +29,6 @@
         });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiDdGyp6n2hKHPECuB6JZIT-8dVHCpwI0&language=id&region=ID"></script>
-    <script>
-        var default_lat = {{ $def_lat }};
-        var default_lng = {{ $def_lng }};
-        var default_zoom = {{ $def_zoom }};
-    </script>
-    <script src="{{ asset('js/script.js') }}"></script>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top">
@@ -51,13 +45,13 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 @if(\Illuminate\Support\Facades\Auth::guard('web')->check())
-                    <li><a href="?m=tempat"><span class="glyphicon glyphicon-map-marker"></span> Tempat</a></li>
+                    <li><a href="{{ route('user.dashboard') }}"><span class="glyphicon glyphicon-map-marker"></span> Tempat</a></li>
                     <li><a href="?m=galeri"><span class="glyphicon glyphicon-picture"></span> Galeri</a></li>
                     <li><a href="?m=password"><span class="glyphicon glyphicon-lock"></span> Password</a></li>
                     <li><a href="aksi.php?act=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 @else
                     <li><a href="?m=tempat_list"><span class="glyphicon glyphicon-map-marker"></span> Tempat</a></li>
-                    <li><a href="?m=login"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+                    <li><a href="{{ route('login') }}"><span class="glyphicon glyphicon-user"></span> Login</a></li>
                 @endif
             </ul>
         </div>
