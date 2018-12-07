@@ -4,29 +4,33 @@
     <div class="page-header">
         <h1>Tambah Tempat</h1>
     </div>
-    <form method="post" action="{{ route('user.tambal-ban.tambah.proses') }}" enctype="multipart/form-data">
-        {{ csrf_field() }}
-        <div class="form-inline">
-            <select class="form-control" name="jenis">
-                <option value="tambal ban">Tambal Ban</option>
-                <option value="bengkel">Bengkel</option>
-            </select>
-            <div class="form-group">
-                <input class="form-control" type="text" placeholder="nama, wilayah,..." name="query" value=""/>
-                <button name="tambah_banyak" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>
-                    Tambah
-                </button>
+    @if(!$edit)
+        <form method="post" action="{{ route('user.tambal-ban.tambah-banyak.proses') }}" enctype="multipart/form-data">
+            {{ csrf_field() }}
+            <div class="form-inline">
+                <select class="form-control" name="jenis">
+                    <option value="tambal ban">Tambal Ban</option>
+                    <option value="bengkel">Bengkel</option>
+                </select>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="nama, wilayah,..." name="q" value=""/>
+                    <button name="tambah_banyak" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>
+                        Tambah
+                    </button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    @endif
     <br>
-    <form method="post" action="{{ route('user.tambal-ban.tambah.proses') }}" enctype="multipart/form-data">
+    <form method="post"
+          action="{{ !$edit ? route('user.tambal-ban.tambah.proses') : route('user.tambal-ban.update.proses', ['id' => $tambal_ban->id]) }}"
+          enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Nama Tempat <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="nama" value=""/>
+                    <input class="form-control" type="text" name="nama" value="{{ $edit ? $tambal_ban->nama : '' }}"/>
                 </div>
                 <div class="form-group">
                     <label>Gambar <span class="text-danger">*</span></label>
@@ -34,15 +38,18 @@
                 </div>
                 <div class="form-group">
                     <label>Latitude <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="lat" id="lat" value=""/>
+                    <input class="form-control" type="text" name="lat" id="lat"
+                           value="{{ $edit ? $tambal_ban->lat : '' }}"/>
                 </div>
                 <div class="form-group">
                     <label>Longitude <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" id="lng" name="lng" value=""/>
+                    <input class="form-control" type="text" id="lng" name="lng"
+                           value="{{ $edit ? $tambal_ban->lng : '' }}"/>
                 </div>
                 <div class="form-group">
                     <label>Lokasi <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="alamat" value=""/>
+                    <input class="form-control" type="text" name="alamat"
+                           value="{{ $edit ? $tambal_ban->alamat : '' }}"/>
                 </div>
                 <div class="form-group">
                     <label>layanan</label>
@@ -50,8 +57,17 @@
                         @foreach ($layanan as $item)
                             <div class="col-lg-6">
                                 <div class="checkbox">
-                                    <label><input type="checkbox" id="layanan{{ $item->id }}" value="{{ $item->id }}"
-                                                  name="layanan[]">{{ $item->nama }}</label>
+                                    @if($edit)
+                                        <label><input type="checkbox" id="layanan{{ $item->id }}"
+                                                      value="{{ $item->id }}"
+                                                      name="layanan[]" {{ in_array($item->id, $layanan_tambal_ban) ? 'checked' : ''}} >{{ $item->nama }}
+                                        </label>
+                                        @else
+                                        <label><input type="checkbox" id="layanan{{ $item->id }}"
+                                                      value="{{ $item->id }}"
+                                                      name="layanan[]" >{{ $item->nama }}
+                                        </label>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
@@ -61,7 +77,7 @@
                     <label>Jam Kerja</label>
                     {{--{!! $hari = \App\Helper::get_hari();--}}
                     {{--$jam = \App\Helper::get_jam(); !!}--}}
-                    @foreach ($hari as $item)
+                    @foreach ($hari as $key => $item)
                         <div class="row">
                             <div class="col-lg-2">
                                 <label>{{ $item }}</label>
@@ -69,7 +85,11 @@
                             <div class="col-lg-6">
                                 <select name="jam_buka[]">
                                     @foreach ($jam as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                        @if($edit && isset($tambal_ban->jam_kerja))
+                                            <option value="{{ $item }}" {{ json_decode($tambal_ban->jam_kerja)->buka[$key] == $item ? 'selected' : '' }} >{{ $item }}</option>
+                                        @else
+                                            <option value="{{ $item }}">{{ $item }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 -
@@ -84,7 +104,7 @@
                 </div>
                 <div class="form-group">
                     <label>Keterangan</label>
-                    <textarea class="mce" name="keterangan"></textarea>
+                    <textarea class="mce" name="keterangan">{{ $edit ? $tambal_ban->keterangan : '' }}</textarea>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Simpan</button>

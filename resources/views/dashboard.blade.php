@@ -44,7 +44,7 @@
                 <td>{{ $item->lng }}</td>
                 <td>{{ $item->alamat }}</td>
                 <td class="nw">
-                    <a class="btn btn-xs btn-warning" href=""><span class="glyphicon glyphicon-edit"></span></a>
+                    <a class="btn btn-xs btn-warning" href="{{ route('user.tambal-ban.edit', ['id' => $item->id]) }}"><span class="glyphicon glyphicon-edit"></span></a>
                     <a class="btn btn-xs btn-danger" href="" onclick="return confirm('Hapus data?')"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>

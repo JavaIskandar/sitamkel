@@ -11,6 +11,14 @@ namespace App;
 
 class Helper
 {
+    public static function get_geocode($query){
+        return 'https://nominatim.openstreetmap.org/search.php?format=json&q='.$query.'&limit=50&email=iskandarjava@gmail.com';
+    }
+
+    public static function get_reverse_geocode($lat, $lon){
+        return 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat='.$lat.'&lon='.$lon.'&zoom=21&email=iskandarjava@gmail.com';
+    }
+
     public static function get_jam(){
         $jam = array();
         $jam[0]= '--';

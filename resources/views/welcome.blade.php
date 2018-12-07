@@ -28,23 +28,12 @@
         var default_lng = {{ $def_lng }};
         var default_zoom = {{ $def_zoom }};
     </script>
+
     <script src="{{ asset('js/script.js') }}"></script>
+
     <script>
-        function tampilDekat() {
-            getCurLocation();
 
-            map_dekat = new google.maps.Map(document.getElementById('map'), {
-                zoom: {{ $def_zoom }},
-                center: {
-                    lat: default_lat,
-                    lng: default_lng
-                }
-            });
-
-                    {{--{{ dd(json_encode($tambal_ban)) }}--}}
-
-            var data =  <?= json_encode($tambal_ban) ?>;
-
+        function addMarker(data) {
             $.each(data, function (k, v) {
                 var obj = JSON.parse(v.jam_kerja);
                 var pos = {
@@ -85,8 +74,26 @@
             });
         }
 
+        function initMap() {
+            getCurLocation();
+
+            map_dekat = new google.maps.Map(document.getElementById('map'), {
+                zoom: {{ $def_zoom }},
+                center: {
+                    lat: default_lat,
+                    lng: default_lng
+                }
+            });
+
+                    {{--{{ dd(json_encode($tambal_ban)) }}--}}
+
+            var data =  <?= json_encode($tambal_ban) ?>;
+
+            addMarker(data);
+        }
+
         $(function () {
-            tampilDekat();
+            initMap();
         })
     </script>
 @endpush

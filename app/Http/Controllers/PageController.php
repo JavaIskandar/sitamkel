@@ -88,6 +88,7 @@ class PageController extends Controller
         $zoom = (double)Pengaturan::getOption('default_zoom');
 
         return view('form_tambal_ban', [
+            'edit' => false,
             'hari' => $hari,
             'jam' => $jam,
             'layanan' => $layanan,
@@ -132,6 +133,31 @@ class PageController extends Controller
             'def_lat' => $lat,
             'def_lng' => $lng,
             'def_zoom' => $zoom
+        ]);
+    }
+
+    public function editTambalBan(Request $request){
+
+        $tambalBan = TambalBan::find($request->id);
+        $layanan = Layanan::all();
+        $jam = Helper::get_jam();
+        $hari = Helper::get_hari();
+        $zoom = (double)Pengaturan::getOption('default_zoom');
+
+        $layananTambalBan = $tambalBan->getLayanan()->get()->pluck('id')->toArray();
+
+//        dd(json_decode($tambalBan->jam_kerja)->buka);
+
+        return view('form_tambal_ban', [
+            'edit' => true,
+            'tambal_ban' => $tambalBan,
+            'hari' => $hari,
+            'jam' => $jam,
+            'layanan' => $layanan,
+            'def_lat' => $tambalBan->lat,
+            'def_lng' => $tambalBan->lng,
+            'def_zoom' => $zoom,
+            'layanan_tambal_ban' => $layananTambalBan
         ]);
     }
 }

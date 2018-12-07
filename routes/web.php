@@ -40,9 +40,24 @@ Route::get('tambah', [
     'as' => 'user.tambal-ban.tambah'
 ]);
 
+Route::get('edit', [
+    'uses' => 'PageController@editTambalBan',
+    'as' => 'user.tambal-ban.edit'
+]);
+
 Route::post('tambah-proses', [
     'uses' => 'TambalBanController@tambahTambalBan',
     'as' => 'user.tambal-ban.tambah.proses'
+]);
+
+Route::post('tambah-banyak-proses', [
+    'uses' => 'TambalBanController@tambahBanyak',
+    'as' => 'user.tambal-ban.tambah-banyak.proses'
+]);
+
+Route::post('update-proses', [
+    'uses' => 'TambalBanController@updateTambalBan',
+    'as' => 'user.tambal-ban.update.proses'
 ]);
 
 Route::get('detail-tempat', [
