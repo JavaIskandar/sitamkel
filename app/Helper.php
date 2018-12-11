@@ -16,7 +16,7 @@ class Helper
     }
 
     public static function get_reverse_geocode($lat, $lon){
-        return 'https://nominatim.openstreetmap.org/reverse.php?format=json&lat='.$lat.'&lon='.$lon.'&zoom=21&email=iskandarjava@gmail.com';
+        return 'https://nominatim.openstreetmap.org/reverse?format=json&lat='.$lat.'&lon='.$lon.'&email=iskandarjava@gmail.com';
     }
 
     public static function get_jam(){

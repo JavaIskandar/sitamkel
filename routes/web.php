@@ -50,6 +50,26 @@ Route::post('tambah-proses', [
     'as' => 'user.tambal-ban.tambah.proses'
 ]);
 
+Route::post('tambah-galeri-proses', [
+    'uses' => 'TambalBanController@tambahGaleri',
+    'as' => 'user.galeri.tambah.proses'
+]);
+
+Route::get('get-gambar/{path}', [
+    'uses' => 'PageController@getGambar',
+    'as' => 'user.get-gambar'
+]);
+
+Route::get('get-geocode', [
+   'uses' => 'GeocodeSearch@action',
+   'as' => 'get-geocode'
+]);
+
+Route::get('get-reverse-geocode', [
+    'uses' => 'ReverseGeocodeSearch@action',
+    'as' => 'get-reverse-geocode'
+]);
+
 Route::post('tambah-banyak-proses', [
     'uses' => 'TambalBanController@tambahBanyak',
     'as' => 'user.tambal-ban.tambah-banyak.proses'

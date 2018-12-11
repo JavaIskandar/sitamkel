@@ -7,6 +7,7 @@ use App\Layanan;
 use App\Pengaturan;
 use App\TambalBan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
@@ -143,11 +144,11 @@ class PageController extends Controller
         $jam = Helper::get_jam();
         $hari = Helper::get_hari();
         $zoom = (double)Pengaturan::getOption('default_zoom');
+        $galeri = $tambalBan->getGaleri(false);
 
         $layananTambalBan = $tambalBan->getLayanan()->get()->pluck('id')->toArray();
 
 //        dd(json_decode($tambalBan->jam_kerja)->buka);
-
         return view('form_tambal_ban', [
             'edit' => true,
             'tambal_ban' => $tambalBan,
@@ -157,7 +158,12 @@ class PageController extends Controller
             'def_lat' => $tambalBan->lat,
             'def_lng' => $tambalBan->lng,
             'def_zoom' => $zoom,
-            'layanan_tambal_ban' => $layananTambalBan
+            'layanan_tambal_ban' => $layananTambalBan,
+            'galeri' => $galeri
         ]);
+    }
+
+    public function getGambar($path){
+        return response()->file(storage_path('app/' . decrypt($path)));
     }
 }

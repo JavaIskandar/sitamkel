@@ -34,4 +34,8 @@ class TambalBan extends Model
                 $q->whereIn('id', $layanan);
         })->get();
     }
+
+    public function getGaleri($query = true){
+        return $query ? $this->hasMany('App\Galeri', 'tambal_ban_id') : $this->hasMany('App\Galeri', 'tambal_ban_id')->get();
+    }
 }

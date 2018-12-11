@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Galeri;
 use App\Helper;
 use App\Layanan;
 use App\TambalBan;
@@ -16,22 +17,26 @@ class TambalBanController extends Controller
 
         $jam = json_encode($jam);
 
+        $idLayanan = $request->layanan;
+
+        if(isset($request->gambar)){
+            $path = $request->file('gambar')->store('gambar');
+        }
+
         $tambalBan = TambalBan::create([
             'nama' => $request->nama,
             'lat' => $request->lat,
             'lng' => $request->lng,
             'alamat' => $request->alamat,
             'jam_kerja' => $jam,
-            'keterangan' => $request->keterangan
+            'keterangan' => $request->keterangan,
+            'gambar' => $path
         ]);
-
-        $idLayanan = $request->layanan;
 
         foreach ($idLayanan as $item){
             $layanan = Layanan::find($item);
             $layanan->getTambalBan()->attach($tambalBan->id);
         }
-
 
         return redirect()->route('user.dashboard');
     }
@@ -103,6 +108,17 @@ class TambalBanController extends Controller
                 $jumlah++;
             }
         }
+    }
+
+    public function tambahGaleri(Request $request){
+        if(isset($request->gambar)){
+            $path = $request->file('gambar')->store('gambar/'.$request->id);
+            $galeri = Galeri::create([
+                'tambal_ban_id' => $request->id,
+                'gambar' => $path
+            ]);
+        }
+
     }
 
     public function hapusTambalBan(Request $request){

@@ -48,8 +48,10 @@
                 </div>
                 <div class="form-group">
                     <label>Lokasi <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="alamat"
+                    <input class="form-control" type="text" id="alamat" name="alamat"
                            value="{{ $edit ? $tambal_ban->alamat : '' }}"/>
+                    <button type="button" onclick="getGeocode()" class="btn btn-primary">GeoCode</button>
+                    <button type="button" onclick="getReverseGeocode()" class="btn btn-primary">Reverse GeoCode</button>
                 </div>
                 <div class="form-group">
                     <label>layanan</label>
@@ -62,10 +64,10 @@
                                                       value="{{ $item->id }}"
                                                       name="layanan[]" {{ in_array($item->id, $layanan_tambal_ban) ? 'checked' : ''}} >{{ $item->nama }}
                                         </label>
-                                        @else
+                                    @else
                                         <label><input type="checkbox" id="layanan{{ $item->id }}"
                                                       value="{{ $item->id }}"
-                                                      name="layanan[]" >{{ $item->nama }}
+                                                      name="layanan[]">{{ $item->nama }}
                                         </label>
                                     @endif
                                 </div>
@@ -114,16 +116,28 @@
             </div>
             <div class="col-sm-6">
                 <div id="map" style="height: 700px;"></div>
+                <div class="row">
+                    @foreach($galeri as $item)
+                        <div class="col-lg-3">
+                            <img style="width: 100px; height: 100px"
+                                 src="{{ route('user.get-gambar', ['path' => encrypt($item->gambar)]) }}"/>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </form>
+    @if($edit)
+        <form method="post"
+              action="{{ route('user.galeri.tambah.proses', ['id' => $tambal_ban->id]) }}"
+              enctype="multipart/form-data">
+            {{ csrf_field() }}
+            <input class="form-control" type="file" name="gambar"/>
+            <button type="submit" class="btn btn-light">Tambah Galeri</button>
+        </form>
+    @endif
 @endsection
 @push('js')
-    <script>
-        var default_lat = {{ $def_lat }};
-        var default_lng = {{ $def_lng }};
-        var default_zoom = {{ $def_zoom }};
-    </script>
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
         var defaultCenter = {
@@ -131,19 +145,66 @@
             lng: {{ $def_lng }}
         };
 
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: {{ $def_zoom  }},
+            center: defaultCenter
+        });
+
+        var marker = new google.maps.Marker({
+            position: defaultCenter,
+            map: map,
+            title: 'Click to zoom',
+            draggable: true
+        });
+
+        function getReverseGeocode() {
+
+            var lat = document.getElementById('lat').value;
+            var lng = document.getElementById('lat').value;
+            $.ajax({
+                url: "{{ route('get-reverse-geocode') }}",
+                method: 'GET',
+                data: {
+                    lat: lat,
+                    lng: lng
+                },
+                dataType: 'json',
+                success: function (data) {
+                    // alert(data['lat']);
+                    // $('#lat').text(data['lat']);
+                    console.log(data);
+                    alert(data);
+
+                }
+            });
+        }
+
+        function getGeocode() {
+            var query = document.getElementById('alamat').value;
+            $.ajax({
+                url: "{{ route('get-geocode') }}",
+                method: 'GET',
+                data: {query: query},
+                dataType: 'json',
+                success: function (data) {
+                    // alert(data['lat']);
+                    // $('#lat').text(data['lat']);
+                    document.getElementById('lat').value = data['lat'];
+                    document.getElementById('lng').value = data['lon'];
+
+                    var latlng = new google.maps.LatLng(data['lat'], data['lon']);
+                    marker.setPosition(latlng);
+                }
+            });
+        }
+
+        var default_lat = {{ $def_lat }};
+        var default_lng = {{ $def_lng }};
+        var default_zoom = {{ $def_zoom }};
+
         function initMap() {
 
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: {{ $def_zoom  }},
-                center: defaultCenter
-            });
 
-            var marker = new google.maps.Marker({
-                position: defaultCenter,
-                map: map,
-                title: 'Click to zoom',
-                draggable: true
-            });
 
 
             marker.addListener('drag', handleEvent);
