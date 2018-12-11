@@ -12,12 +12,7 @@ class GeocodeSearch extends Controller
     }
 
     public function action(Request $request){
-//        $query = $request->get('query');
-//        $data = null;
-//        if($query != ''){
-//            $data = $this->getCoordinate($query);
-//        }
-//        dd(json_encode($data));
+
         if ($request->ajax()){
             $query = $request->get('query');
             $data = null;

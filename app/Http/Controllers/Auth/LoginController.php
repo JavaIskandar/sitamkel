@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -45,8 +46,8 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         $user = User::where('email', $request->email)->first();
-
-        if ($user->password == $request->password){
+//        dd($user);
+        if ( Hash::check($request->password, $user->password)){
             Auth::guard('web')->login($user);
 
             redirect()->route('homepage');
