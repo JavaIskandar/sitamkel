@@ -160,7 +160,7 @@
         function getReverseGeocode() {
 
             var lat = document.getElementById('lat').value;
-            var lng = document.getElementById('lat').value;
+            var lng = document.getElementById('lng').value;
             $.ajax({
                 url: "{{ route('get-reverse-geocode') }}",
                 method: 'GET',
@@ -174,6 +174,7 @@
                     // $('#lat').text(data['lat']);
                     console.log(data);
                     alert(data);
+                    document.getElementById('alamat').value = data;
 
                 }
             });

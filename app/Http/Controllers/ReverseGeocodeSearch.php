@@ -34,11 +34,13 @@ class ReverseGeocodeSearch extends Controller
 //        dd(json_encode($data['display_name']));
 
         if ($request->ajax()) {
+
             $lat = $request->get('lat');
             $lng = $request->get('lng');
             $data = null;
             $data = $this->getDetail($lat, $lng);
-            echo json_encode($data);
+
+            echo json_encode($data['display_name']);
 //        if ($request->ajax()){
 //            $data['display_name'] = 'java';
 //            echo json_encode($data);
