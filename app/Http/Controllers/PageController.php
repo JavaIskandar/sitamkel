@@ -139,7 +139,7 @@ class PageController extends Controller
 
     public function editTambalBan(Request $request){
 
-        $tambalBan = TambalBan::find($request->id);
+        $tambalBan = TambalBan::query()->find($request->id);
         $layanan = Layanan::all();
         $jam = Helper::get_jam();
         $hari = Helper::get_hari();

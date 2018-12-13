@@ -122,6 +122,10 @@ class TambalBanController extends Controller
     }
 
     public function hapusTambalBan(Request $request){
-
+        $tambalBan = TambalBan::find($request->id);
+        $tambalBan->getLayanan()->detach();
+        $tambalBan->getGaleri()->detach();
+        $tambalBan->delete();
+        return route('user.dashboard');
     }
 }

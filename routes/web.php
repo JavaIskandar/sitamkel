@@ -80,6 +80,11 @@ Route::post('update-proses', [
     'as' => 'user.tambal-ban.update.proses'
 ]);
 
+Route::get('delete-proses/{id}', [
+    'uses' => 'TambalBanController@hapusTambalBan',
+    'as' => 'user.tambal-ban.delete.proses'
+]);
+
 Route::get('detail-tempat', [
     'uses' => 'PageController@showDetail',
     'as' => 'detail-tempat'
@@ -94,5 +99,9 @@ Route::namespace('Auth')->group(function () {
     Route::post('/login', [
         'uses' => 'LoginController@authenticate',
         'as' => 'login.proses'
+    ]);
+    Route::get('/logout', [
+        'uses' => 'LoginController@logout',
+        'as' => 'logout.proses'
     ]);
 });
