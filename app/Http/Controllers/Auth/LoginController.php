@@ -61,7 +61,7 @@ class LoginController extends Controller
     public function logout()
     {
         if (Auth::guard('web')->check()){
-            Auth::logout();
+            Auth::guard('web')->logout();
             return redirect()->route('homepage');
         }
 

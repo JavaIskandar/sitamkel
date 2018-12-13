@@ -12,7 +12,7 @@
                 Node Terdekat: <span id="terdekat"></span></p>
         </div>
     </div>
-    <p class="help-block">Geser marker atau garis untuk mengubah rute.</p>
+    <p class="help-block">Geser marker atau node rute untuk mengubah rute.</p>
 @endsection
 @push('js')
     <script>
