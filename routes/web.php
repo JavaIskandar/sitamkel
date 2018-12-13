@@ -91,8 +91,12 @@ Route::get('detail-rute', [
 ]);
 
 Route::namespace('Auth')->group(function () {
-    Route::post('/login', [
+    Route::post('/login-proses', [
         'uses' => 'LoginController@authenticate',
         'as' => 'login.proses'
+    ]);
+    Route::get('/logout-proses', [
+        'uses' => 'LoginController@logout',
+        'as' => 'logout.proses'
     ]);
 });

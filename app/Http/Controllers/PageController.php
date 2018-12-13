@@ -104,6 +104,7 @@ class PageController extends Controller
         $tambalBan = TambalBan::find($request->id);
         $layanan = $tambalBan->getLayanan(false);
         $hari = Helper::get_hari();
+        $galeri = $tambalBan->getGaleri(false);
 
         $lat = (double)Pengaturan::getOption('default_lat');
         $lng = (double)Pengaturan::getOption('default_lng');
@@ -114,7 +115,7 @@ class PageController extends Controller
             'layanan' => $layanan,
             'hari' => $hari,
             'jam' => json_decode($tambalBan->jam_kerja),
-            'galeri' => [],
+            'galeri' => $galeri,
             'def_lat' => $lat,
             'def_lng' => $lng,
             'def_zoom' => $zoom

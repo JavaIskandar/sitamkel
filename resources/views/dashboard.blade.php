@@ -29,8 +29,8 @@
                 <th>No</th>
                 <th>Gambar</th>
                 <th>Nama Tempat</th>
-                <th>Lat</th>
-                <th>Lng</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
                 <th>Lokasi</th>
                 <th>Aksi</th>
             </tr>

@@ -46,11 +46,12 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         $user = User::where('email', $request->email)->first();
-//        dd($user);
-        if ( Hash::check($request->password, $user->password)){
-            Auth::guard('web')->login($user);
 
-            redirect()->route('homepage');
+        if ( Hash::check($request->password, $user->password)){
+
+            Auth::guard('web')->login($user);
+//            dd($user);
+            return redirect()->route('homepage');
         }
 
 
@@ -60,11 +61,11 @@ class LoginController extends Controller
     public function logout()
     {
         if (Auth::guard('web')->check()){
-            Auth::guard('web')->logout();
-            return redirect()->route('landing');
+            Auth::logout();
+            return redirect()->route('homepage');
         }
 
         Auth::logout();
-        return redirect()->route('landing');
+        return redirect()->route('homepage');
     }
 }

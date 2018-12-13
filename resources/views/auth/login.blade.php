@@ -1,9 +1,6 @@
 @extends('layout')
 
 @section('content')
-    <div class="page-header">
-        <h1>Login</h1>
-    </div>
     <div class="row">
         <div class="col-md-4">
             <form class="form-signin" action="{{ route('login.proses') }}" method="post">

@@ -16,32 +16,41 @@
                     <li>{{ $item->layanan }}</li>
                 @endforeach
             </ul>
-            <div class="container-fluid">
-                <span>Jam buka</span>
-                @foreach ($hari as $key=>$item)
-                    <div class="container row">
-                        <div class="col-lg-2">
-                            <a>{{ $item }}</a>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                    <tr class="nw">
+
+                        <th>Hari</th>
+                        <th>Jam Buka</th>
+                    </tr>
+                    </thead>
+                    @foreach ($hari as $key=>$item)
+                        <div class="container row">
+                            <tr>
+                            <td class="col-lg-2">
+                                <a>{{ $item }}</a>
+                            </td>
+                            <td class="col-lg-5">
+                                @if ($jam != null)
+                                    <p>{{ $jam->buka[$key] }} - {{ $jam->tutup[$key] }}</p>
+                                @else
+                                    <p>--:--</p>
+                                @endif
+                            </td>
+                            </tr>
                         </div>
-                        <div class="col-lg-5">
-                            @if ($jam != null)
-                                <p>{{ $jam->buka[$key] }} - {{ $jam->tutup[$key] }}</p>
-                            @else
-                                <p>--:--</p>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </table>
             </div>
+
         </div>
         <div class="col-md-6">
             <p>
-                <a href="?m=tempat_list" class="btn btn-primary btn-sm"><span
-                            class="glyphicon glyphicon-chevron-left"></span> Lihat semua tempat</a>
-                <a href="javascript:void(0)" onclick="showRoute()" class="btn btn-info btn-sm"> <span
-                            class="glyphicon glyphicon-search"></span> Tampilkan Rute </a>
-                <a href="{{ route('detail-tempat.route', ['id' => $tambal_ban->id]) }}" class="btn btn-primary btn-sm"><span
-                            class="glyphicon glyphicon-list"></span> Rute Detail</a>
+                <a href="{{route('home')}}?m=tempat_list" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-chevron-left"></span> Lihat semua tempat</a>
+                <a href="javascript:void(0)" onclick="showRoute()" class="btn btn-info btn-sm"> <span class="glyphicon glyphicon-search"></span> Tampilkan Rute </a>
+                <a href="{{ route('detail-tempat.route', ['id' => $tambal_ban->id]) }}" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-list"></span> Rute Detail</a>
             </p>
             <div id="map" style="height: 500px;"></div>
             <h3>Galeri</h3>
@@ -49,9 +58,10 @@
                 @foreach ($galeri as $item)
                 <div class="col-lg-3 col-md-4 col-xs-6 thumb">
                     <a class="thumbnail" href="#" data-image-id="" data-toggle="modal"
-                       data-caption="{{ strip_tags($item->ket_galeri) }}"
-                       data-image="assets/images/galeri/{{ $item->gambar }}" data-target="#image-gallery">
-                        <img src="assets/images/galeri/small_{{ $r->gambar }}"/>
+{{--                       data-caption="{{ strip_tags($item->ket_galeri) }}"--}}
+                       data-image="{{ route('user.get-gambar', ['path' => encrypt($item->gambar)]) }}" data-target="#image-gallery">
+                        <img style="width: 100px; height: 100px"
+                             src="{{ route('user.get-gambar', ['path' => encrypt($item->gambar)]) }}"/>
                     </a>
                 </div>
                 @endforeach

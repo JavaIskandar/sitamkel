@@ -3,7 +3,7 @@
 @section('content')
     <link href="{{ asset('css/detail.css') }}" rel="stylesheet"/>
     <div class="page-header">
-        <h1>Rute Detail ke {{  $tambal_ban->nama_tempat }}</h1>
+        <h1>Rute Detail{{  $tambal_ban->nama_tempat }}</h1>
     </div>
     <div class="clearfix" style="background: white;">
         <div id="map"></div>

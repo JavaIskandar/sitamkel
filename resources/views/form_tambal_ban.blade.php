@@ -37,19 +37,10 @@
                     <input class="form-control" type="file" name="gambar"/>
                 </div>
                 <div class="form-group">
-                    <label>Latitude <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" name="lat" id="lat"
-                           value="{{ $edit ? $tambal_ban->lat : '' }}"/>
-                </div>
-                <div class="form-group">
-                    <label>Longitude <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" id="lng" name="lng"
-                           value="{{ $edit ? $tambal_ban->lng : '' }}"/>
-                </div>
-                <div class="form-group">
                     <label>Lokasi <span class="text-danger">*</span></label>
                     <input class="form-control" type="text" id="alamat" name="alamat"
                            value="{{ $edit ? $tambal_ban->alamat : '' }}"/>
+                    <br>
                     <button type="button" onclick="getGeocode()" class="btn btn-primary">GeoCode</button>
                     <button type="button" onclick="getReverseGeocode()" class="btn btn-primary">Reverse GeoCode</button>
                 </div>
@@ -106,7 +97,7 @@
                 </div>
                 <div class="form-group">
                     <label>Keterangan</label>
-                    <textarea class="mce" name="keterangan">{{ $edit ? $tambal_ban->keterangan : '' }}</textarea>
+                    <textarea class="mce form-control" name="keterangan">{{ $edit ? $tambal_ban->keterangan : '' }}</textarea>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Simpan</button>
@@ -117,12 +108,14 @@
             <div class="col-sm-6">
                 <div id="map" style="height: 700px;"></div>
                 <div class="row">
-                    @foreach($galeri as $item)
-                        <div class="col-lg-3">
-                            <img style="width: 100px; height: 100px"
-                                 src="{{ route('user.get-gambar', ['path' => encrypt($item->gambar)]) }}"/>
-                        </div>
-                    @endforeach
+                    @if($edit)
+                        @foreach($galeri as $item)
+                            <div class="col-lg-3">
+                                <img style="width: 100px; height: 100px"
+                                     src="{{ route('user.get-gambar', ['path' => encrypt($item->gambar)]) }}"/>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -138,95 +131,93 @@
     @endif
 @endsection
 @push('js')
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script>
-        var defaultCenter = {
-            lat: {{ $def_lat }},
-            lng: {{ $def_lng }}
-        };
+<script src="{{ asset('js/script.js') }}"></script>
+<script>
+    var defaultCenter = {
+        lat: {{ $def_lat }},
+        lng: {{ $def_lng }}
+    };
 
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: {{ $def_zoom  }},
-            center: defaultCenter
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: {{ $def_zoom  }},
+        center: defaultCenter
+    });
+
+    var marker = new google.maps.Marker({
+        position: defaultCenter,
+        map: map,
+        title: 'Click to zoom',
+        draggable: true
+    });
+
+    function getReverseGeocode() {
+
+        var lat = document.getElementById('lat').value;
+        var lng = document.getElementById('lng').value;
+        $.ajax({
+            url: "{{ route('get-reverse-geocode') }}",
+            method: 'GET',
+            data: {
+                lat: lat,
+                lng: lng
+            },
+            dataType: 'json',
+            success: function (data) {
+                // alert(data['lat']);
+                // $('#lat').text(data['lat']);
+                console.log(data);
+                alert(data);
+                document.getElementById('alamat').value = data;
+
+            }
+        });
+    }
+
+    function getGeocode() {
+        var query = document.getElementById('alamat').value;
+        $.ajax({
+            url: "{{ route('get-geocode') }}",
+            method: 'GET',
+            data: {query: query},
+            dataType: 'json',
+            success: function (data) {
+                // alert(data['lat']);
+                // $('#lat').text(data['lat']);
+                document.getElementById('lat').value = data['lat'];
+                document.getElementById('lng').value = data['lon'];
+
+                var latlng = new google.maps.LatLng(data['lat'], data['lon']);
+                marker.setPosition(latlng);
+            }
+        });
+    }
+
+    var default_lat = {{ $def_lat }};
+    var default_lng = {{ $def_lng }};
+    var default_zoom = {{ $def_zoom }};
+
+    function initMap() {
+
+
+        marker.addListener('drag', handleEvent);
+        marker.addListener('dragend', handleEvent);
+
+        var infowindow = new google.maps.InfoWindow({
+            content: '<h4>Drag untuk pindah lokasi</h4>'
         });
 
-        var marker = new google.maps.Marker({
-            position: defaultCenter,
-            map: map,
-            title: 'Click to zoom',
-            draggable: true
-        });
+        infowindow.open(map, marker);
+    }
 
-        function getReverseGeocode() {
+    function handleEvent(event) {
+        document.getElementById('lat').value = event.latLng.lat();
+        document.getElementById('lng').value = event.latLng.lng();
+    }
 
-            var lat = document.getElementById('lat').value;
-            var lng = document.getElementById('lng').value;
-            $.ajax({
-                url: "{{ route('get-reverse-geocode') }}",
-                method: 'GET',
-                data: {
-                    lat: lat,
-                    lng: lng
-                },
-                dataType: 'json',
-                success: function (data) {
-                    // alert(data['lat']);
-                    // $('#lat').text(data['lat']);
-                    console.log(data);
-                    alert(data);
-                    document.getElementById('alamat').value = data;
+    // https://nominatim.openstreetmap.org/search.php?format=json&q=masjid+surabaya&limit=50
 
-                }
-            });
-        }
-
-        function getGeocode() {
-            var query = document.getElementById('alamat').value;
-            $.ajax({
-                url: "{{ route('get-geocode') }}",
-                method: 'GET',
-                data: {query: query},
-                dataType: 'json',
-                success: function (data) {
-                    // alert(data['lat']);
-                    // $('#lat').text(data['lat']);
-                    document.getElementById('lat').value = data['lat'];
-                    document.getElementById('lng').value = data['lon'];
-
-                    var latlng = new google.maps.LatLng(data['lat'], data['lon']);
-                    marker.setPosition(latlng);
-                }
-            });
-        }
-
-        var default_lat = {{ $def_lat }};
-        var default_lng = {{ $def_lng }};
-        var default_zoom = {{ $def_zoom }};
-
-        function initMap() {
-
-
-
-
-            marker.addListener('drag', handleEvent);
-            marker.addListener('dragend', handleEvent);
-
-            var infowindow = new google.maps.InfoWindow({
-                content: '<h4>Drag untuk pindah lokasi</h4>'
-            });
-
-            infowindow.open(map, marker);
-        }
-
-        function handleEvent(event) {
-            document.getElementById('lat').value = event.latLng.lat();
-            document.getElementById('lng').value = event.latLng.lng();
-        }
-
-        // https://nominatim.openstreetmap.org/search.php?format=json&q=masjid+surabaya&limit=50
-
-        $(function () {
-            initMap();
-        })
-    </script>
+    $(function () {
+        initMap();
+    })
+</script>
 @endpush

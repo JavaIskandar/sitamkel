@@ -108,6 +108,7 @@ class TambalBanController extends Controller
                 $jumlah++;
             }
         }
+        return back();
     }
 
     public function tambahGaleri(Request $request){
@@ -118,7 +119,7 @@ class TambalBanController extends Controller
                 'gambar' => $path
             ]);
         }
-
+        return back();
     }
 
     public function hapusTambalBan(Request $request){

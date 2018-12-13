@@ -1,28 +1,7 @@
 @extends('layout')
 
-@section('content')
-    <div class="page-header">
-        <h1>Tempat</h1>
-    </div>
-    <form class="form-inline" method="get" action="{{ route('cari') }}">
-        {{ csrf_field() }}
-        <input type="hidden" name="m" value="tempat"/>
-        <div class="form-group">
-            <input class="form-control" type="text" placeholder="Pencarian. . ." name="q" value=""/>
-            <select class="form-control" name="layanan">
-                <option value="">Jenis Layanan</option>
-                @foreach ($layanan as $item)
-                    <option value="{{ $item->id }}"> {{ $item->nama }}</option>
-                @endforeach
-            </select>
-            <button class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
-        </div>
-    </form>
-    <br>
-    <div id="map" style="height: 500px;"></div>
-@endsection
-
 @push('js')
+{{--<script src="{{ asset('template/js/main.js') }}"></script>--}}
     <script>
         var default_lat = {{ $def_lat }};
         var default_lng = {{ $def_lng }};
@@ -96,4 +75,26 @@
             initMap();
         })
     </script>
+
+
 @endpush
+
+@section('content')
+
+    <form class="form-inline" method="get" action="{{ route('cari') }}">
+        {{ csrf_field() }}
+        <input type="hidden" name="m" value="tempat"/>
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Pencarian. . ." name="q" value=""/>
+            <select class="form-control" name="layanan">
+                <option value="">Jenis Layanan</option>
+                @foreach ($layanan as $item)
+                    <option value="{{ $item->id }}"> {{ $item->nama }}</option>
+                @endforeach
+            </select>
+            <button class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+    </form>
+    <br>
+    <div id="map" style="height: 500px;"></div>
+@endsection
